@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -5,6 +6,7 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const incidentRoutes = require("./routes/incidentRoutes");
+const emergencyRoutes = require("./routes/emergencyRoutes");
 
 const app = express();
 
@@ -15,6 +17,23 @@ app.use(express.json());
 // API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/incidents", incidentRoutes);
+app.use("/api/emergency", emergencyRoutes);
+console.log("Emergency router loaded:", typeof emergencyRoutes);
+console.log(
+  "Emergency router stack:",
+  emergencyRoutes.stack.map((layer) => ({
+    path: layer.route?.path,
+    methods: layer.route
+      ? Object.keys(layer.route.methods)
+      : [],
+  }))
+);
+// Temporary emergency diagnostic route
+app.get("/api/emergency/test", (req, res) => {
+  res.status(200).json({
+    message: "Emergency route is reachable",
+  });
+});
 
 // Home route
 app.get("/", (req, res) => {
@@ -44,3 +63,4 @@ mongoose
     console.error("MongoDB connection failed:", error.message);
     process.exit(1);
   });
+
