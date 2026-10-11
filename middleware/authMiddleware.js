@@ -1,6 +1,8 @@
+
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+// Verify the JWT and identify the logged-in user
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -38,7 +40,6 @@ const protect = async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
   } catch (error) {
     if (
@@ -58,4 +59,24 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+// Allow only users with the admin role
+const adminOnly = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      message: "Authentication required",
+    });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      message: "Access denied. Admin privileges required.",
+    });
+  }
+
+  next();
+};
+
+module.exports = {
+  protect,
+  adminOnly,
+};

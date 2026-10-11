@@ -7,6 +7,10 @@ require("dotenv").config();
 const authRoutes = require("./routes/authRoutes");
 const incidentRoutes = require("./routes/incidentRoutes");
 const emergencyRoutes = require("./routes/emergencyRoutes");
+const {
+  protect,
+  adminOnly,
+} = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -18,20 +22,13 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/incidents", incidentRoutes);
 app.use("/api/emergency", emergencyRoutes);
-console.log("Emergency router loaded:", typeof emergencyRoutes);
-console.log(
-  "Emergency router stack:",
-  emergencyRoutes.stack.map((layer) => ({
-    path: layer.route?.path,
-    methods: layer.route
-      ? Object.keys(layer.route.methods)
-      : [],
-  }))
-);
-// Temporary emergency diagnostic route
-app.get("/api/emergency/test", (req, res) => {
+
+// Temporary admin authorization test
+app.get("/api/admin/test", protect, adminOnly, (req, res) => {
   res.status(200).json({
-    message: "Emergency route is reachable",
+    message: "Admin access granted",
+    user: req.user.fullName,
+    role: req.user.role,
   });
 });
 
@@ -47,7 +44,7 @@ app.use((req, res) => {
   });
 });
 
-// Connect to MongoDB and start the server
+// Connect to MongoDB and start server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -63,4 +60,3 @@ mongoose
     console.error("MongoDB connection failed:", error.message);
     process.exit(1);
   });
-
