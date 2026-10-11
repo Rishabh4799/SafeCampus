@@ -4,26 +4,43 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
+const incidentRoutes = require("./routes/incidentRoutes");
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoutes);
 
+// API routes
+app.use("/api/auth", authRoutes);
+app.use("/api/incidents", incidentRoutes);
+
+// Home route
 app.get("/", (req, res) => {
-  res.send("SafeCampus Backend is running!");
+  res.status(200).send("SafeCampus Backend is running!");
 });
 
+// Handle unknown routes
+app.use((req, res) => {
+  res.status(404).json({
+    message: `Route not found: ${req.method} ${req.originalUrl}`,
+  });
+});
+
+// Connect to MongoDB and start the server
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected successfully");
 
-    app.listen(process.env.PORT, () => {
-      console.log(`Server running on http://localhost:${process.env.PORT}`);
+    const PORT = process.env.PORT || 5000;
+
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((error) => {
     console.error("MongoDB connection failed:", error.message);
+    process.exit(1);
   });
