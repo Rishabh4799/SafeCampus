@@ -1,17 +1,22 @@
+
 const express = require("express");
-const { protect } = require("../middleware/authMiddleware");
+const { protect, adminOnly } = require("../middleware/authMiddleware");
 
 const {
   createEmergency,
   getMyEmergencies,
+  getAllEmergencies,
+  updateEmergencyStatus,
 } = require("../controllers/emergencyController");
 
 const router = express.Router();
 
-// Create an emergency alert
+// Student routes
 router.post("/", protect, createEmergency);
-
-// Get the logged-in student's emergency alerts
 router.get("/my", protect, getMyEmergencies);
+
+// Admin routes
+router.get("/admin", protect, adminOnly, getAllEmergencies);
+router.put("/:id/status", protect, adminOnly, updateEmergencyStatus);
 
 module.exports = router;
