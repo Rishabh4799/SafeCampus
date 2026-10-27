@@ -953,15 +953,14 @@ navigate('/login')
                   <p>Submit a campus safety concern for review.</p>
 
                   <button
-
-                    className="btn btn-primary"
-
-                    onClick={() => navigate('/register')}
-
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                  setIncidentMessage('')
+                  setShowIncidentForm(true)
+                  }}
                   >
-
-                    Report now
-
+                  Report now
                   </button>
 
                 </article>
