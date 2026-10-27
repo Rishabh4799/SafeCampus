@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import './App.css'
 
 function App() {
 
-  const [showLogin, setShowLogin] = useState(false)
 
-  const [showRegister, setShowRegister] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+const showLogin = location.pathname === '/login'
+const showRegister = location.pathname === '/register'
+  
 
   const [showIncidentForm, setShowIncidentForm] = useState(false)
 
@@ -187,12 +193,12 @@ function App() {
   }, [currentUser])
 
   const closeAuthModal = () => {
+navigate('/login')
 
-    setShowLogin(false)
-
-    setShowRegister(false)
-
+  if (location.pathname === '/login' || location.pathname === '/register') {
+    navigate('/')
   }
+}
 
   const handleLogout = () => {
 
@@ -776,9 +782,7 @@ function App() {
 
         alert('Registration successful! Please log in.')
 
-        setShowRegister(false)
-
-        setShowLogin(true)
+        navigate('/login')
 
         return
 
@@ -952,13 +956,7 @@ function App() {
 
                     className="btn btn-primary"
 
-                    onClick={() => {
-
-                      setIncidentMessage('')
-
-                      setShowIncidentForm(true)
-
-                    }}
+                    onClick={() => navigate('/register')}
 
                   >
 
@@ -1630,13 +1628,7 @@ function App() {
 
             className="btn btn-outline"
 
-            onClick={() => {
-
-              setShowLogin(true)
-
-              setShowRegister(false)
-
-            }}
+            onClick={() => navigate('/login')}
 
           >
 
@@ -1648,13 +1640,7 @@ function App() {
 
             className="btn btn-primary"
 
-            onClick={() => {
-
-              setShowRegister(true)
-
-              setShowLogin(false)
-
-            }}
+            onClick={() => navigate('/register')}
 
           >
 
@@ -1690,13 +1676,7 @@ function App() {
 
                 className="btn btn-primary btn-large"
 
-                onClick={() => {
-
-                  setShowRegister(true)
-
-                  setShowLogin(false)
-
-                }}
+                onClick={() => navigate('/register')}
 
               >
 
@@ -1890,13 +1870,7 @@ function App() {
 
                 {showLogin ? 'New to SafeCampus?' : 'Already registered?'}
 
-                <button onClick={() => {
-
-                  setShowLogin(!showLogin)
-
-                  setShowRegister(!showRegister)
-
-                }}>
+                <button onClick={() => navigate(showLogin ? '/register' : '/login')}>
 
                   {showLogin ? ' Create account' : ' Log in'}
 
