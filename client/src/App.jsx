@@ -1605,50 +1605,40 @@ navigate('/login')
 
       <header className="navbar">
 
-        <a className="brand" href="#">
-
-          <span className="brand-icon">S</span>
-
-          SafeCampus
-
+        <a
+        className="brand"
+        href="/"
+        onClick={(e) => {
+        e.preventDefault()
+        navigate('/')
+        }}
+        >
+        <span className="brand-icon">S</span>
+        SafeCampus
         </a>
 
-        <nav>
-
-          <a href="#features">Features</a>
-
-          <a href="#how-it-works">How it works</a>
-
+        <nav className="nav-links">
+        <a href="/#features">Features</a>
+        <a href="/#how-it-works">How it works</a>
         </nav>
 
         <div className="nav-actions">
+  <button
+    type="button"
+    className="btn btn-outline"
+    onClick={() => navigate('/login')}
+  >
+    Log in
+  </button>
 
-          <button
-
-            className="btn btn-outline"
-
-            onClick={() => navigate('/login')}
-
-          >
-
-            Log in
-
-          </button>
-
-          <button
-
-            className="btn btn-primary"
-
-            onClick={() => navigate('/register')}
-
-          >
-
-            Report now&#x20;
-
-          </button>
-
-        </div>
-
+  <button
+    type="button"
+    className="btn btn-primary"
+    onClick={() => navigate('/register')}
+  >
+    Get Started
+  </button>
+</div>
       </header>
 
       <main>
