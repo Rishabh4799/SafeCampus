@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import './App.css'
 
 function App() {
 
-  const [showLogin, setShowLogin] = useState(false)
 
-  const [showRegister, setShowRegister] = useState(false)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
+const showLogin = location.pathname === '/login'
+const showRegister = location.pathname === '/register'
+  
 
   const [showIncidentForm, setShowIncidentForm] = useState(false)
 
@@ -187,12 +193,12 @@ function App() {
   }, [currentUser])
 
   const closeAuthModal = () => {
+navigate('/login')
 
-    setShowLogin(false)
-
-    setShowRegister(false)
-
+  if (location.pathname === '/login' || location.pathname === '/register') {
+    navigate('/')
   }
+}
 
   const handleLogout = () => {
 
@@ -776,9 +782,7 @@ function App() {
 
         alert('Registration successful! Please log in.')
 
-        setShowRegister(false)
-
-        setShowLogin(true)
+        navigate('/login')
 
         return
 
@@ -949,21 +953,14 @@ function App() {
                   <p>Submit a campus safety concern for review.</p>
 
                   <button
-
-                    className="btn btn-primary"
-
-                    onClick={() => {
-
-                      setIncidentMessage('')
-
-                      setShowIncidentForm(true)
-
-                    }}
-
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                  setIncidentMessage('')
+                  setShowIncidentForm(true)
+                  }}
                   >
-
-                    Report now
-
+                  Report now
                   </button>
 
                 </article>
@@ -1608,62 +1605,40 @@ function App() {
 
       <header className="navbar">
 
-        <a className="brand" href="#">
-
-          <span className="brand-icon">S</span>
-
-          SafeCampus
-
+        <a
+        className="brand"
+        href="/"
+        onClick={(e) => {
+        e.preventDefault()
+        navigate('/')
+        }}
+        >
+        <span className="brand-icon">S</span>
+        SafeCampus
         </a>
 
-        <nav>
-
-          <a href="#features">Features</a>
-
-          <a href="#how-it-works">How it works</a>
-
+        <nav className="nav-links">
+        <a href="/#features">Features</a>
+        <a href="/#how-it-works">How it works</a>
         </nav>
 
         <div className="nav-actions">
+  <button
+    type="button"
+    className="btn btn-outline"
+    onClick={() => navigate('/login')}
+  >
+    Log in
+  </button>
 
-          <button
-
-            className="btn btn-outline"
-
-            onClick={() => {
-
-              setShowLogin(true)
-
-              setShowRegister(false)
-
-            }}
-
-          >
-
-            Log in
-
-          </button>
-
-          <button
-
-            className="btn btn-primary"
-
-            onClick={() => {
-
-              setShowRegister(true)
-
-              setShowLogin(false)
-
-            }}
-
-          >
-
-            Report now&#x20;
-
-          </button>
-
-        </div>
-
+  <button
+    type="button"
+    className="btn btn-primary"
+    onClick={() => navigate('/register')}
+  >
+    Get Started
+  </button>
+</div>
       </header>
 
       <main>
@@ -1690,13 +1665,7 @@ function App() {
 
                 className="btn btn-primary btn-large"
 
-                onClick={() => {
-
-                  setShowRegister(true)
-
-                  setShowLogin(false)
-
-                }}
+                onClick={() => navigate('/register')}
 
               >
 
@@ -1890,13 +1859,7 @@ function App() {
 
                 {showLogin ? 'New to SafeCampus?' : 'Already registered?'}
 
-                <button onClick={() => {
-
-                  setShowLogin(!showLogin)
-
-                  setShowRegister(!showRegister)
-
-                }}>
+                <button onClick={() => navigate(showLogin ? '/register' : '/login')}>
 
                   {showLogin ? ' Create account' : ' Log in'}
 

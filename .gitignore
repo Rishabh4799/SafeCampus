@@ -1,2 +1,4 @@
 node_modules/
 .env
+# Local admin account setup script
+server/createAdmin.js
